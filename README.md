@@ -51,7 +51,7 @@ As with any other [AngularJS][] module:
     properly with IE 6 or 7.  Some of the functionality can be coerced into working, but much of it
 	will simply be broken.  `radio` fields, for example, will have every member selected.  This may
 	be fixed in a future version, but as it's 2014, IE 6 and 7 are very low priorities, especially
-	with XP reaching end of life.  IE 8 will work, with a bit of extra setup (you can try this for 
+	with XP reaching end of life.  IE 8 will work, with a bit of extra setup (you can try this for
     IE 6 and 7 as well, but again, they probably won't work):
 
 ```html
@@ -64,13 +64,13 @@ As with any other [AngularJS][] module:
             document.createElement('ng-view');
             document.createElement('ng-form');
             document.createElement('dynamic-form');
-            
+
             // Optionally these for CSS
             document.createElement('ng:include');
             document.createElement('ng:pluralize');
             document.createElement('ng:view');
             document.createElement('ng:form');
-            
+
             // IE doesn't always run the bootstrap on its own...
             $(document).ready(function() {
               angular.bootstrap(document.documentElement);
@@ -98,7 +98,7 @@ As with any other [AngularJS][] module:
 
 ```javascript
     $scope.formData = {};   // JavaScript needs an object to put our form's models into.
-    
+
     $scope.formTemplate = [
         {
             "type": "text",
@@ -120,7 +120,7 @@ As with any other [AngularJS][] module:
             "model": "submit"
         },
     ];
-    
+
     $scope.processForm = function () {
         /* Handle the form submission... */
     };
