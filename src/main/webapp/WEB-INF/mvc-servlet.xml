@@ -8,5 +8,9 @@
     <context:component-scan base-package="com.moatcrew.csvmanager"/>
 
     <mvc:annotation-driven />
+    <mvc:resources mapping="/services/**" location="/services/" />
+    <mvc:resources mapping="/controllers/**" location="/controllers/" />
+    <mvc:resources mapping="/directives/**" location="/directives/" />
+    <mvc:resources mapping="/app.js" location="/app.js" />
 
 </beans>
