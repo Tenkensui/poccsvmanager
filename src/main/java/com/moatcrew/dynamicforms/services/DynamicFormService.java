@@ -1,14 +1,19 @@
 package com.moatcrew.dynamicforms.services;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * Created by maruku on 13/04/16.
  */
 public interface DynamicFormService<T> {
 
     /**
-     * Converts an input file to T
-     * @param inputFilePath path to the file to convert
-     * @return a T representing the innput file content
+     * Creates a dynamic form for thi given tableName
+     * @return a dynamic form formatted as T, representing the given tableName
      */
-    T convertToJson(String inputFilePath);
+    T getForm(String tableName);
+
+    void initializeForms(String sourceFilePath) throws IOException;
+
 }
