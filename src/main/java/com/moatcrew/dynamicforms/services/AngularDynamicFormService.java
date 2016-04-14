@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Created by maruku on 13/04/16.
  */
 @Service
-public class JSONDynamicFormService implements DynamicFormService<JSONArray> {
+public class AngularDynamicFormService implements DynamicFormService<JSONArray> {
 
     private HashMap<String, String> formsCache;
 

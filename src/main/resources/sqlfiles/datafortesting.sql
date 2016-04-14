@@ -1,6 +1,8 @@
 create table test (testpk1 date not null,
-                   testvarchar varchar2(255),
+                   testpk2 varchar not null,
+                   testvarchar varchar(255),
                    testnumber number(100),
-                   testlong long,
-                   testdate  date);
+                   testdate  date not null,
+                   PRIMARY KEY testpk1, testpk2
+);
 
