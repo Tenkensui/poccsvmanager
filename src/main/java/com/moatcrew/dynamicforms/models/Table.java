@@ -1,5 +1,6 @@
 package com.moatcrew.dynamicforms.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,6 +10,13 @@ public class Table {
 
     private String name;
     private List<Column> columns;
+
+    public Table() {
+    }
+
+    public Table(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -24,5 +32,12 @@ public class Table {
 
     public void setColumns(List<Column> columns) {
         this.columns = columns;
+    }
+
+    public void addColumn(Column column) {
+        if (columns == null) {
+            columns = new ArrayList<Column>();
+        }
+        columns.add(column);
     }
 }
