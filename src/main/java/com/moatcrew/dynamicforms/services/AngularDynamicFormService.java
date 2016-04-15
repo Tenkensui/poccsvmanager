@@ -3,8 +3,8 @@ package com.moatcrew.dynamicforms.services;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -21,11 +21,16 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
     }
 
     public void initializeForms(String sourceFilePath) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(sourceFilePath));
-        String line = null;
-        while ((line = br.readLine()) != null) {
-
-        }
+        String fileContents = getFileContents(sourceFilePath);
     }
 
+    private String getFileContents(String sourceFilePath) throws IOException {
+        File file = new File(sourceFilePath);
+        FileInputStream fis = new FileInputStream(file);
+        byte[] data = new byte[(int) file.length()];
+        fis.read(data);
+        fis.close();
+
+        return new String(data, "UTF-8");
+    }
 }
