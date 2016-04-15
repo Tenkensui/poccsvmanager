@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by maruku on 13/04/16.
@@ -14,6 +15,7 @@ import java.util.HashMap;
 @Service
 public class AngularDynamicFormService implements DynamicFormService<JSONArray> {
 
+    private static Pattern CREATE_TABLE_PATTERN = Pattern.compile("(?s)(create table a_.*?\\n\\\\);");
     private HashMap<String, String> formsCache;
 
     public JSONArray getForm(String tableName) {
