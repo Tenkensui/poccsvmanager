@@ -7,6 +7,11 @@ public class ForeignKey {
     private Table table;
     private Column column;
 
+    public ForeignKey(Table table, Column column) {
+        this.table = table;
+        this.column = column;
+    }
+
     public Table getTable() {
         return table;
     }

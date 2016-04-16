@@ -1,7 +1,9 @@
 package com.moatcrew.dynamicforms.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by maruku on 14/04/16.
@@ -9,7 +11,7 @@ import java.util.List;
 public class Table {
 
     private String name;
-    private List<Column> columns;
+    private Map<String, Column> columns;
 
     public Table() {
     }
@@ -26,18 +28,18 @@ public class Table {
         this.name = name;
     }
 
-    public List<Column> getColumns() {
+    public Map<String, Column> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<Column> columns) {
+    public void setColumns(Map<String, Column> columns) {
         this.columns = columns;
     }
 
     public void addColumn(Column column) {
         if (columns == null) {
-            columns = new ArrayList<Column>();
+            columns = new HashMap<String, Column>();
         }
-        columns.add(column);
+        columns.put(column.getName(), column);
     }
 }
