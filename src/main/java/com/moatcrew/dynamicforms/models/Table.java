@@ -11,6 +11,8 @@ import java.util.Map;
 public class Table {
 
     private String name;
+    private PrimaryKey primaryKey;
+    private List<ForeignKey> foreignKeys;
     private Map<String, Column> columns;
 
     public Table() {
@@ -34,6 +36,29 @@ public class Table {
 
     public void setColumns(Map<String, Column> columns) {
         this.columns = columns;
+    }
+
+    public PrimaryKey getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(PrimaryKey primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public List<ForeignKey> getForeignKeys() {
+        return foreignKeys;
+    }
+
+    public void setForeignKeys(List<ForeignKey> foreignKeys) {
+        this.foreignKeys = foreignKeys;
+    }
+
+    public void addForeignKey(ForeignKey foreignKey) {
+        if (foreignKeys == null) {
+            foreignKeys = new ArrayList<ForeignKey>();
+        }
+        foreignKeys.add(foreignKey);
     }
 
     public void addColumn(Column column) {

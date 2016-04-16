@@ -24,15 +24,13 @@ import java.util.regex.Pattern;
 @Service
 public class AngularDynamicFormService implements DynamicFormService<JSONArray> {
 
-    private static Logger LOG = Logger.getLogger(AngularDynamicFormService.class.getName());
-
     /**
      * Patters
      */
     private static Pattern TABLES_PATTERN = Pattern.compile("create table.*?;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern TABLE_NAME_PATTERN = Pattern.compile("create table ([A-Za-z0-9_]+)", Pattern.CASE_INSENSITIVE);
     private static Pattern COLUMN_NAME_PATTERN = Pattern.compile("(^(?!primary key)[A-Za-z0-9_]+)", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
-    private static Pattern COLUMN_TYPE_PATTERN = Pattern.compile("^(?!primary key).*?\\s([A-Za-z0-9]+)[\\s|\\(]", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static Pattern COLUMN_TYPE_PATTERN = Pattern.compile("(?!primary key).*?\\s([A-Za-z0-9]+)[\\s|\\(|,]", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern COLUMN_NOTNULL_PATTERN = Pattern.compile("^(?!primary key).*?(not null)", Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_PATTERN = Pattern.compile("alter table.*?;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_NAME_PATTERN = Pattern.compile("alter table\\s([A-Za-z0-9_]+)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
@@ -85,14 +83,18 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
             final String references = getMatchingString(alterTable, ALTER_TABLE_FK_REFERENCES_PATTERN);
             final String fksChunk = getMatchingString(alterTable, ALTER_TABLE_FK_CHUNK_PATTERN);
             final String[] fks = fksChunk.split(",");
+
+            final Table originTable = tablesCache.get(tableName);
+            final Table referenceTable = tablesCache.get(references);
+            final ForeignKey foreignKey = new ForeignKey(originTable, referenceTable);
+            final List<Column> columns = new ArrayList<Column>();
             for (String fk : fks) {
-                final Table table = tablesCache.get(tableName);
-                final Table targetTable = tablesCache.get(references);
-                final Column column = table.getColumns().get(fk);
-//                final Column targetColumn = targetTable.getColumns().get(fk);
-//                column.setForeignKey(new ForeignKey(targetTable, targetColumn));
-//                System.out.println("blah");
+                final Column originColumn = originTable.getColumns().get(fk.trim());
+                originColumn.setForeignKey(foreignKey);
+                columns.add(originColumn);
             }
+            foreignKey.setColumns(columns);
+            originTable.addForeignKey(foreignKey);
         }
 
     }
@@ -101,8 +103,6 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
         Matcher matcher = pattern.matcher(line.trim());
         if (matcher.find()) {
             return matcher.group(1);
-        } else {
-            LOG.info("No matches for pattern:\n " + pattern.pattern() + "\nOn line:\n" + line);
         }
         return "";
     }
