@@ -5,11 +5,11 @@ package com.moatcrew.dynamicforms.models;
  */
 public class ForeignKey {
     private Table table;
-    private Column column;
+    private ForeignKey foreignKey;
 
-    public ForeignKey(Table table, Column column) {
+    public ForeignKey(Table table, ForeignKey foreignKey) {
         this.table = table;
-        this.column = column;
+        this.foreignKey = foreignKey;
     }
 
     public Table getTable() {
@@ -20,11 +20,11 @@ public class ForeignKey {
         this.table = table;
     }
 
-    public Column getColumn() {
-        return column;
+    public ForeignKey getForeignKey() {
+        return foreignKey;
     }
 
-    public void setColumn(Column column) {
-        this.column = column;
+    public void setForeignKey(ForeignKey foreignKey) {
+        this.foreignKey = foreignKey;
     }
 }
