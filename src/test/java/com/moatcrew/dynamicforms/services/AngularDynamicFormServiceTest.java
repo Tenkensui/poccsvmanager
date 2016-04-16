@@ -39,6 +39,7 @@ public class AngularDynamicFormServiceTest {
                 Assert.assertNotEquals("Column name is empty for table " + table.getName(), "", column.getName());
                 Assert.assertNotEquals("Column type is empty for table " + table.getName() + " and column name " + column.getName(), "", column.getType());
             }
+            Assert.assertNotNull(table.getPrimaryKey());
         }
     }
 

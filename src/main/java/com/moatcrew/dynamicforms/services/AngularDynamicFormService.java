@@ -2,6 +2,7 @@ package com.moatcrew.dynamicforms.services;
 
 import com.moatcrew.dynamicforms.models.Column;
 import com.moatcrew.dynamicforms.models.ForeignKey;
+import com.moatcrew.dynamicforms.models.PrimaryKey;
 import com.moatcrew.dynamicforms.models.Table;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,8 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
     private static Pattern ALTER_TABLE_PATTERN = Pattern.compile("alter table.*?;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_NAME_PATTERN = Pattern.compile("alter table\\s([A-Za-z0-9_]+)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_FK_CHUNK_PATTERN = Pattern.compile("foreign key\\s\\((.*?)\\)", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
-    private static Pattern ALTER_TABLE_FK_REFERENCES_PATTERN = Pattern.compile("references\\s(.*?);", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static Pattern ALTER_TABLE_FK_REFERENCES_PATTERN = Pattern.compile("references\\s(.*?)\\n;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static Pattern PRIMARY_KEY_PATTERN = Pattern.compile("primary key\\s(.*?)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     // TODO Add primary key parsing, not needed for first POC
 
     private Map<String, Table> tablesCache;
@@ -70,9 +72,22 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
                     table.addColumn(column);
                 }
             }
+            loadPrimaryKey(create, table);
             tablesCache.put(table.getName(), table);
         }
         loadForeignKeys(fileContents);
+    }
+
+    private void loadPrimaryKey(String createChunk, Table table) {
+        String primaryKeyChunk = getMatchingString(createChunk, PRIMARY_KEY_PATTERN);
+        String[] primaryKeyColumns = primaryKeyChunk.split(",");
+        List<Column> columns = new ArrayList<Column>();
+        for (String pk : primaryKeyColumns) {
+            final Column column = table.getColumns().get(pk.trim());
+            column.setPrimaryKey(true);
+            columns.add(column);
+        }
+        table.setPrimaryKey(new PrimaryKey(table, columns));
     }
 
     private void loadForeignKeys(String fileContents) {
