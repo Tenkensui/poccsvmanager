@@ -39,4 +39,9 @@ public class AngularDynamicFormServiceTest {
         JSONArray jsonArray = service.getForm(TEST);
         Assert.assertNotNull(jsonArray);
     }
+
+    @Test
+    public void getFormNamesTest() throws Exception {
+        Assert.assertTrue(service.getFormNames().size() > 0);
+    }
 }

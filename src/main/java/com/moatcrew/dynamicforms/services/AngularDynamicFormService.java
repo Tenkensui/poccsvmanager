@@ -5,8 +5,7 @@ import com.moatcrew.dynamicforms.models.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by maruku on 13/04/16.
@@ -34,6 +33,10 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
         }
 
         return jsonArray;
+    }
+
+    public List<String> getFormNames() {
+        return new ArrayList<String>(tablesCache.keySet());
     }
 
     private String determineType(String sqlType) {
