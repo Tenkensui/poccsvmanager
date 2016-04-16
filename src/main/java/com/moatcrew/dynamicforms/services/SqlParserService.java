@@ -4,8 +4,6 @@ import com.moatcrew.dynamicforms.models.Column;
 import com.moatcrew.dynamicforms.models.ForeignKey;
 import com.moatcrew.dynamicforms.models.PrimaryKey;
 import com.moatcrew.dynamicforms.models.Table;
-import org.json.JSONArray;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -21,7 +19,6 @@ import java.util.regex.Pattern;
 /**
  * Created by maruku on 16/04/16.
  */
-@Service
 public class SqlParserService {
 
     /**
@@ -38,9 +35,9 @@ public class SqlParserService {
     private static Pattern ALTER_TABLE_FK_REFERENCES_PATTERN = Pattern.compile("references\\s(.*?)\\n;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern PRIMARY_KEY_PATTERN = Pattern.compile("primary key\\s(.*?)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
-    private Map<String, Table> tablesCache;
+    private HashMap<String, Table> tablesCache;
 
-    public Map<String, Table> initializeForms(String sourceFilePath) throws IOException {
+    public Map<String, Table> initialize(String sourceFilePath) throws IOException {
         loadTables(sourceFilePath);
         return tablesCache;
     }
@@ -52,7 +49,6 @@ public class SqlParserService {
         while (matcher.find()) {
             creates.add(matcher.group(0));
         }
-        tablesCache = new HashMap<String, Table>();
         for (String create : creates) {
             String[] lines = create.trim().split("\n");
             final Table table = new Table(getMatchingString(lines[0], TABLE_NAME_PATTERN));
@@ -129,5 +125,10 @@ public class SqlParserService {
 
     public Map<String, Table> getTablesCache() {
         return tablesCache;
+    }
+
+    public SqlParserService(HashMap<String, Table> tablesCache) throws IOException {
+        this.tablesCache = tablesCache;
+        initialize(SqlParserService.class.getResource("/sqlfiles/datafortesting.sql").getFile());
     }
 }

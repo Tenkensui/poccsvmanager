@@ -6,17 +6,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 /**
  * Created by maruku on 15/04/16.
  */
 public class SqlParserServiceTest {
 
-    SqlParserService service;
-    String filePath;
+    private SqlParserService service;
+    private String filePath;
 
     @Before
     public void setUp() throws Exception {
-        service = new SqlParserService();
+        service = new SqlParserService(new HashMap<String, Table>());
         filePath = SqlParserServiceTest.class.getResource("/sqlfiles/datafortesting.sql").getFile();
     }
 
@@ -29,7 +31,7 @@ public class SqlParserServiceTest {
 
     @Test
     public void initializeFormsTest() throws Exception {
-        service.initializeForms(filePath);
+        service.initialize(filePath);
         Assert.assertTrue(service.getTablesCache().size() > 0);
         for (Table table : service.getTablesCache().values()) {
             for (Column column : table.getColumns().values()) {

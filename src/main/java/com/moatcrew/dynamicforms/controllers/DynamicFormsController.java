@@ -1,9 +1,12 @@
 package com.moatcrew.dynamicforms.controllers;
 
+import com.moatcrew.dynamicforms.services.AngularDynamicFormService;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -13,10 +16,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class DynamicFormsController {
 
+    @Autowired
+    AngularDynamicFormService angularDynamicFormService;
+
     @RequestMapping("/")
     public String helloWorld(Model model) {
 
         return "/services/sample.html";
+    }
+
+    @RequestMapping(value = "/form/{formName}", produces = "application/json")
+    @ResponseBody
+    public String getForm(@PathVariable String formName) {
+        JSONArray ja = angularDynamicFormService.getForm(formName);
+
+        return ja.toString();
     }
 
     @RequestMapping(value = "/getSampleJson", produces = "application/json")
