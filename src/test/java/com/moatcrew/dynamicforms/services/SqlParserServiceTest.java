@@ -9,15 +9,15 @@ import org.junit.Test;
 /**
  * Created by maruku on 15/04/16.
  */
-public class AngularDynamicFormServiceTest {
+public class SqlParserServiceTest {
 
-    AngularDynamicFormService service;
+    SqlParserService service;
     String filePath;
 
     @Before
     public void setUp() throws Exception {
-        service = new AngularDynamicFormService();
-        filePath = AngularDynamicFormServiceTest.class.getResource("/sqlfiles/datafortesting.sql").getFile();
+        service = new SqlParserService();
+        filePath = SqlParserServiceTest.class.getResource("/sqlfiles/datafortesting.sql").getFile();
     }
 
     @Test

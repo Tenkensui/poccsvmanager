@@ -14,6 +14,4 @@ public interface DynamicFormService<T> {
      */
     T getForm(String tableName);
 
-    void initializeForms(String sourceFilePath) throws IOException;
-
 }
