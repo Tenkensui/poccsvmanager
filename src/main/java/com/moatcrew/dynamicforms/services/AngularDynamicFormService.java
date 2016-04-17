@@ -23,15 +23,16 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
         Table table = tablesCache.get(name);
 
         JSONArray jsonArray = new JSONArray();
-        for (Column column : table.getColumns().values()) {
-            JSONObject jsonObject = new JSONObject()
-                    .put("type", determineType(column.getType()))
-                    .put("model", column.getName())
-                    .put("label", column.getName());
+        if (table != null && table.getColumns() != null) {
+            for (Column column : table.getColumns().values()) {
+                JSONObject jsonObject = new JSONObject()
+                        .put("type", determineType(column.getType()))
+                        .put("model", column.getName())
+                        .put("label", column.getName());
 
-            jsonArray.put(jsonObject);
+                jsonArray.put(jsonObject);
+            }
         }
-
         return jsonArray;
     }
 
