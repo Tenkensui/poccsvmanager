@@ -32,4 +32,10 @@ public class DataController {
         uuidObject.put("uuid", csvDataService.create(formName, dataMappings));
         return uuidObject.toString();
     }
+
+    @RequestMapping(value = "/data/find/{formName}", produces = "application/json")
+    @ResponseBody
+    public String find(@PathVariable String formName) {
+        return csvDataService.find(formName).toString();
+    }
 }
