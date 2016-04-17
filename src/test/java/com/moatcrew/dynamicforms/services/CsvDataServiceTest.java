@@ -9,11 +9,9 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 /**
  * Created by maruku on 17/04/16.
@@ -24,7 +22,7 @@ public class CsvDataServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        service = new CsvDataService(CsvDataServiceTest.class.getResource("/csvfiles/").getFile());
+        service = new CsvDataService(new File(CsvDataServiceTest.class.getResource("/csvfiles/").getFile()));
     }
 
     @Test

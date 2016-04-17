@@ -14,6 +14,9 @@
     <bean name="angularDynamicFormService" class="com.moatcrew.dynamicforms.services.AngularDynamicFormService">
         <constructor-arg ref="tablesCache"/>
     </bean>
+    <bean name="csvDataService" class="com.moatcrew.dynamicforms.services.CsvDataService">
+        <constructor-arg value="${csv.path}"/>
+    </bean>
 
     <context:component-scan base-package="com.moatcrew.dynamicforms"/>
 

@@ -5,15 +5,13 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -100,7 +98,11 @@ public class CsvDataService {
         return jsonArray;
     }
 
-    public CsvDataService(String csvFilesDirectory) {
+    public CsvDataService(String csvFilesDirectory) throws URISyntaxException {
         this.csvFilesDirectory = new File(csvFilesDirectory);
+    }
+
+    CsvDataService(File csvPath) {
+        this.csvFilesDirectory = csvPath;
     }
 }
