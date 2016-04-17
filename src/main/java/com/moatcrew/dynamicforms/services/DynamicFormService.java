@@ -1,7 +1,5 @@
 package com.moatcrew.dynamicforms.services;
 
-import java.util.List;
-
 /**
  * Created by maruku on 13/04/16.
  */
@@ -13,6 +11,6 @@ public interface DynamicFormService<T> {
      */
     T getForm(String name);
 
-    List<String> getFormNames();
+    T getFormNames();
 
 }

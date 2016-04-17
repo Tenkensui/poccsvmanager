@@ -36,8 +36,10 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
         return jsonArray;
     }
 
-    public List<String> getFormNames() {
-        return new ArrayList<String>(tablesCache.keySet());
+    public JSONArray getFormNames() {
+        List<String> formNames = new ArrayList<String>(tablesCache.keySet());
+        Collections.sort(formNames);
+        return new JSONArray(formNames);
     }
 
     private String determineType(String sqlType) {

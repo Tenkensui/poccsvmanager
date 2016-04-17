@@ -42,6 +42,6 @@ public class AngularDynamicFormServiceTest {
 
     @Test
     public void getFormNamesTest() throws Exception {
-        Assert.assertTrue(service.getFormNames().size() > 0);
+        Assert.assertTrue(service.getFormNames().length() > 0);
     }
 }
