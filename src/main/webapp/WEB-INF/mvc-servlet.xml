@@ -11,12 +11,14 @@
     <bean name="sqlParserService" class="com.moatcrew.dynamicforms.services.SqlParserService">
         <constructor-arg ref="tablesCache"/>
     </bean>
+
     <bean name="angularDynamicFormService" class="com.moatcrew.dynamicforms.services.AngularDynamicFormService">
         <constructor-arg ref="tablesCache"/>
+        <constructor-arg ref="csvDataService"/>
     </bean>
+
     <bean name="csvDataService" class="com.moatcrew.dynamicforms.services.CsvDataService">
         <constructor-arg value="${csv.path}"/>
-        <constructor-arg ref="tablesCache"/>
     </bean>
 
     <context:component-scan base-package="com.moatcrew.dynamicforms"/>

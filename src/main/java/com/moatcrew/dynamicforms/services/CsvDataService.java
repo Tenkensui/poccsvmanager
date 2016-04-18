@@ -1,7 +1,5 @@
 package com.moatcrew.dynamicforms.services;
 
-import com.moatcrew.dynamicforms.models.ForeignKey;
-import com.moatcrew.dynamicforms.models.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,7 +8,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -21,13 +19,16 @@ import java.util.logging.Logger;
 public class CsvDataService {
 
     private File csvFilesDirectory;
-    private HashMap<String, Table> tablesCache;
     private Logger LOG = Logger.getLogger(CsvDataService.class.getName());
 
     public JSONArray find(final String form) {
+        return find(form, null);
+    }
+
+    public JSONArray find(final String form, List<String> desiredColumns) {
         File csvFile = getCsvFile(form);
         if (csvFile != null) {
-            return fileToJson(csvFile);
+            return fileToJson(form, csvFile, desiredColumns);
         }
         return new JSONArray();
     }
@@ -68,7 +69,7 @@ public class CsvDataService {
         return br.readLine().split("\\|");
     }
 
-    private JSONArray fileToJson(File matchingFile) {
+    public JSONArray fileToJson(String form, File matchingFile, List<String> desiredColumnNames) {
         JSONArray jsonArray = new JSONArray();
         try (BufferedReader br = new BufferedReader(new FileReader(matchingFile))) {
             String line;
@@ -77,7 +78,7 @@ public class CsvDataService {
             while ((line = br.readLine()) != null) {
                 if (lineCount > 0) {
                     // Data
-                    jsonArray.put(getJsonObject(matchingFile.getName(), line, columnNames));
+                    jsonArray.put(getJsonObject(form, line, columnNames, desiredColumnNames));
                 } else {
                     // Header
                     columnNames = line.split("\\|");
@@ -90,28 +91,22 @@ public class CsvDataService {
         return jsonArray;
     }
 
-    private JSONObject getJsonObject(String formName, String line, String[] columnNames) throws IOException {
+    private JSONObject getJsonObject(String formName, String line, String[] columnNames, List<String> desiredColumnNames) throws IOException {
         final JSONObject jsonObject = new JSONObject();
         final String[] data = line.split("\\|");
         if (columnNames.length != data.length) {
             throw new IOException("Number of columns mismatch in csv file " + formName);
         }
         for (int i = 0; i < data.length; i++) {
-//            if (tablesCache.get(formName).getColumn(columnNames[i]).getForeignKey() != null) {
-//
-//            }
-            jsonObject.put(columnNames[i], data[i]);
+            if (desiredColumnNames == null || desiredColumnNames.contains(columnNames[i])) {
+                jsonObject.put(columnNames[i], data[i]);
+            }
         }
         return jsonObject;
     }
 
-    private Map<String, ForeignKey> getTableFKs(String name) {
-        return tablesCache.get(name).getForeignKeys();
-    }
-
-    public CsvDataService(String csvFilesDirectory, HashMap<String, Table> tablesCache) throws URISyntaxException {
+    public CsvDataService(String csvFilesDirectory) throws URISyntaxException {
         this.csvFilesDirectory = new File(csvFilesDirectory);
-        this.tablesCache = tablesCache;
     }
 
     CsvDataService(File csvPath) {

@@ -1,2 +1,3 @@
 uuid|testpk1|testpk2|testvarchar|testnumber|testdate|template
 uuid|someguid|type|some varchar|14.2|2015-05-29|Template
+uuid2|someguid|type|some varchar|14.2|2015-05-29|Template2

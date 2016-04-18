@@ -28,6 +28,9 @@ public class Table {
     }
 
     public Column getColumn(String columnName) {
+        if ("uuid".equals(columnName) || "template".equals(columnName)) {
+            return null;
+        }
         return columns.get(columnName);
     }
 

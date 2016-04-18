@@ -2,7 +2,6 @@ package com.moatcrew.dynamicforms.services;
 
 import org.json.JSONArray;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,18 +15,11 @@ import java.util.Map;
 /**
  * Created by maruku on 17/04/16.
  */
-public class CsvDataServiceTest {
-
-    private CsvDataService service;
-
-    @Before
-    public void setUp() throws Exception {
-        service = new CsvDataService(new File(CsvDataServiceTest.class.getResource("/csvfiles/").getFile()));
-    }
+public class CsvDataServiceTest extends AbstractTest {
 
     @Test
     public void findTest() throws Exception {
-        JSONArray jsonArray = service.find("test");
+        JSONArray jsonArray = csvDataService.find("test");
         Assert.assertNotNull(jsonArray);
         Assert.assertTrue(jsonArray.length() > 0);
     }
@@ -41,9 +33,9 @@ public class CsvDataServiceTest {
         dataMapping.put("testnumber", 12);
         dataMapping.put("testdate", "2015-05-29");
         dataMapping.put("template", "template");
-        String uuid = service.create("test", dataMapping);
+        String uuid = csvDataService.create("test", dataMapping);
         String expected = uuid + "|newPk|newPk2|newValue|12|2015-05-29|template";
-        File csvFile = service.getCsvFile("test");
+        File csvFile = csvDataService.getCsvFile("test");
         List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
         Assert.assertEquals(expected, contents.get(contents.size() - 1));
     }

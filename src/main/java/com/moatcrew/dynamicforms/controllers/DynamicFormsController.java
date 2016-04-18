@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-
 /**
  * Created by maruku on 12/04/16.
  */
@@ -23,7 +21,6 @@ public class DynamicFormsController {
 
     @RequestMapping("/")
     public String helloWorld(Model model) {
-
         return "/services/sample.html";
     }
 
@@ -31,7 +28,6 @@ public class DynamicFormsController {
     @ResponseBody
     public String getForm(@PathVariable String formName) {
         JSONArray ja = angularDynamicFormService.getForm(formName);
-
         return ja.toString();
     }
 

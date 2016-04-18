@@ -9,7 +9,7 @@ public interface DynamicFormService<T> {
      * Creates a dynamic form for the given table name
      * @return a dynamic form formatted as T, representing the given name
      */
-    T getForm(String name);
+    T getForm(String name, String... disiredColumns);
 
     T getFormNames();
 
