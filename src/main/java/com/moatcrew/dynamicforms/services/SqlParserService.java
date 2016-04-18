@@ -120,7 +120,7 @@ public class SqlParserService {
         fis.read(data);
         fis.close();
 
-        return new String(data, "UTF-8");
+        return new String(data, "UTF-8").replace("\r", "");
     }
 
     public Map<String, Table> getTablesCache() {
