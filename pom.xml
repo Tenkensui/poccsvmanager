@@ -25,6 +25,9 @@
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <war>target/moat-dynamic-forms.war</war>
+                    <httpConnector>
+                        <port>1999</port>
+                    </httpConnector>
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
