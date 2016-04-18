@@ -55,7 +55,7 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
         } else if ("decimal".equals(sqlType)) {
             return "number";
         } else if ("timestamp".equals(sqlType)) {
-            return "datetime";
+            return "date";
         } else if ("date".equals(sqlType)) {
             return "date";
         }

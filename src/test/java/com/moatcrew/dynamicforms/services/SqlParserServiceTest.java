@@ -26,7 +26,6 @@ public class SqlParserServiceTest {
     public void getFileContentsTest() throws Exception {
         String fileContents = service.getFileContents(filePath);
         Assert.assertTrue("SQL file contents should be greater than 0", fileContents.length() > 0);
-        System.out.println(fileContents);
     }
 
     @Test

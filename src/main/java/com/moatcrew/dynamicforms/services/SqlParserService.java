@@ -32,7 +32,7 @@ public class SqlParserService {
     private static Pattern ALTER_TABLE_PATTERN = Pattern.compile("alter table.*?;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_NAME_PATTERN = Pattern.compile("alter table\\s([A-Za-z0-9_]+)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern ALTER_TABLE_FK_CHUNK_PATTERN = Pattern.compile("foreign key\\s\\((.*?)\\)", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
-    private static Pattern ALTER_TABLE_FK_REFERENCES_PATTERN = Pattern.compile("references\\s(.*?)\\n;", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+    private static Pattern ALTER_TABLE_FK_REFERENCES_PATTERN = Pattern.compile("references\\s(.*?);", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
     private static Pattern PRIMARY_KEY_PATTERN = Pattern.compile("primary key\\s(.*?)\\n", Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
     private HashMap<String, Table> tablesCache;
@@ -93,13 +93,11 @@ public class SqlParserService {
             final Table originTable = tablesCache.get(tableName);
             final Table referenceTable = tablesCache.get(references);
             final ForeignKey foreignKey = new ForeignKey(originTable, referenceTable);
-            final List<Column> columns = new ArrayList<Column>();
             for (String fk : fks) {
                 final Column originColumn = originTable.getColumns().get(fk.trim());
                 originColumn.setForeignKey(foreignKey);
-                columns.add(originColumn);
+                foreignKey.addColumn(originColumn);
             }
-            foreignKey.setColumns(columns);
             originTable.addForeignKey(foreignKey);
         }
 

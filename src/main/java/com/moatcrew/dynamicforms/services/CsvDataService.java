@@ -1,17 +1,16 @@
 package com.moatcrew.dynamicforms.services;
 
+import com.moatcrew.dynamicforms.models.ForeignKey;
+import com.moatcrew.dynamicforms.models.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -22,6 +21,7 @@ import java.util.logging.Logger;
 public class CsvDataService {
 
     private File csvFilesDirectory;
+    private HashMap<String, Table> tablesCache;
     private Logger LOG = Logger.getLogger(CsvDataService.class.getName());
 
     public JSONArray find(final String form) {
@@ -77,15 +77,7 @@ public class CsvDataService {
             while ((line = br.readLine()) != null) {
                 if (lineCount > 0) {
                     // Data
-                    final JSONObject jsonObject = new JSONObject();
-                    final String[] data = line.split("\\|");
-                    if (columnNames.length != data.length) {
-                        throw new IOException("Number of columns mismatch in csv file " + matchingFile.getName());
-                    }
-                    for (int i = 0; i < data.length; i++) {
-                        jsonObject.put(columnNames[i], data[i]);
-                    }
-                    jsonArray.put(jsonObject);
+                    jsonArray.put(getJsonObject(matchingFile.getName(), line, columnNames));
                 } else {
                     // Header
                     columnNames = line.split("\\|");
@@ -98,8 +90,28 @@ public class CsvDataService {
         return jsonArray;
     }
 
-    public CsvDataService(String csvFilesDirectory) throws URISyntaxException {
+    private JSONObject getJsonObject(String formName, String line, String[] columnNames) throws IOException {
+        final JSONObject jsonObject = new JSONObject();
+        final String[] data = line.split("\\|");
+        if (columnNames.length != data.length) {
+            throw new IOException("Number of columns mismatch in csv file " + formName);
+        }
+        for (int i = 0; i < data.length; i++) {
+//            if (tablesCache.get(formName).getColumn(columnNames[i]).getForeignKey() != null) {
+//
+//            }
+            jsonObject.put(columnNames[i], data[i]);
+        }
+        return jsonObject;
+    }
+
+    private Map<String, ForeignKey> getTableFKs(String name) {
+        return tablesCache.get(name).getForeignKeys();
+    }
+
+    public CsvDataService(String csvFilesDirectory, HashMap<String, Table> tablesCache) throws URISyntaxException {
         this.csvFilesDirectory = new File(csvFilesDirectory);
+        this.tablesCache = tablesCache;
     }
 
     CsvDataService(File csvPath) {
