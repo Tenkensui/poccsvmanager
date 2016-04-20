@@ -27,6 +27,8 @@
     <mvc:resources mapping="/services/**" location="/services/" />
     <mvc:resources mapping="/controllers/**" location="/controllers/" />
     <mvc:resources mapping="/directives/**" location="/directives/" />
+    <mvc:resources mapping="/views/**" location="/views/" />
+    <mvc:resources mapping="/scripts/**" location="/scripts/" />
     <mvc:resources mapping="/app.js" location="/app.js" />
 
 </beans>
