@@ -4,6 +4,7 @@ import com.moatcrew.dynamicforms.services.CsvDataService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,5 +38,19 @@ public class DataController {
     @ResponseBody
     public String find(@PathVariable String formName) {
         return csvDataService.find(formName).toString();
+    }
+
+    @RequestMapping(value = "/data/delete/{formName}", produces = "application/json", method = RequestMethod.POST)
+    @ResponseBody
+    public String delete(@PathVariable String formName, HttpServletRequest request) {
+        JSONObject response = new JSONObject();
+        String uuid = request.getParameter("uuid");
+        if (StringUtils.isEmpty(uuid)) {
+            response.put("error", "You must specifi the uuid to delete.");
+        } else {
+            Boolean result = csvDataService.delete(formName, uuid);
+            response.put("response", result);
+        }
+        return response.toString();
     }
 }

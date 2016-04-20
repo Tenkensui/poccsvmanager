@@ -26,6 +26,22 @@ public class CsvDataServiceTest extends AbstractTest {
 
     @Test
     public void createTest() throws Exception {
+        Map<String, Object> dataMapping = getSampleObjectMap();
+        String uuid = csvDataService.create("test", dataMapping);
+        String expected = uuid + "|newPk|newPk2|newValue|12|2015-05-29|template";
+        File csvFile = csvDataService.getCsvFile("test");
+        List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
+        Assert.assertEquals(expected, contents.get(contents.size() - 1));
+    }
+
+    @Test
+    public void deleteTest() throws Exception {
+        Map<String, Object> dataMapping = getSampleObjectMap();
+        String uuid = csvDataService.create("test", dataMapping);
+        csvDataService.delete("test", uuid);
+    }
+
+    private Map<String, Object> getSampleObjectMap() {
         Map<String, Object> dataMapping = new HashMap<>();
         dataMapping.put("testpk1", "newPk");
         dataMapping.put("testpk2", "newPk2");
@@ -33,10 +49,6 @@ public class CsvDataServiceTest extends AbstractTest {
         dataMapping.put("testnumber", 12);
         dataMapping.put("testdate", "2015-05-29");
         dataMapping.put("template", "template");
-        String uuid = csvDataService.create("test", dataMapping);
-        String expected = uuid + "|newPk|newPk2|newValue|12|2015-05-29|template";
-        File csvFile = csvDataService.getCsvFile("test");
-        List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
-        Assert.assertEquals(expected, contents.get(contents.size() - 1));
+        return dataMapping;
     }
 }

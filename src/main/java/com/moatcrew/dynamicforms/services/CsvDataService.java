@@ -12,11 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by maruku on 17/04/16.
  */
 public class CsvDataService {
+
+    private static final String EMPTY_LINE_REGEX = "(?m)^[ \\t]*\\r?\\n";
+    private static final String LAST_LINE_BREAK_REGEX = "(?m)[ \\t]*\\r?\\n$";
 
     private File csvFilesDirectory;
     private Logger LOG = Logger.getLogger(CsvDataService.class.getName());
@@ -55,6 +60,25 @@ public class CsvDataService {
         return "";
     }
 
+    public Boolean delete(String form, String uuid) {
+        File csvFile = getCsvFile(form);
+
+        final String csvContents = readFile(csvFile);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
+            Pattern pattern = Pattern.compile(uuid + ".*?$");
+            Matcher matcher = pattern.matcher(csvContents);
+            if (matcher.find()) {
+                writer.write(csvContents.replace(matcher.group(), "")
+                        .replaceAll(EMPTY_LINE_REGEX, "")
+                        .replaceFirst(LAST_LINE_BREAK_REGEX, ""));
+                return true;
+            }
+        } catch (IOException e) {
+            LOG.severe(e.getMessage());
+        }
+        return false;
+    }
+
     File getCsvFile(final String form) {
         File[] files = csvFilesDirectory.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -64,12 +88,25 @@ public class CsvDataService {
         return files.length > 0 ? files[0] : null;
     }
 
+    private String readFile(File file) {
+        String content = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content += line + "\n";
+            }
+        } catch (IOException e) {
+            LOG.severe(e.getMessage());
+        }
+        return content;
+    }
+
     private String[] getHeaders(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         return br.readLine().split("\\|");
     }
 
-    public JSONArray fileToJson(String form, File matchingFile, List<String> desiredColumnNames) {
+    private JSONArray fileToJson(String form, File matchingFile, List<String> desiredColumnNames) {
         JSONArray jsonArray = new JSONArray();
         try (BufferedReader br = new BufferedReader(new FileReader(matchingFile))) {
             String line;
