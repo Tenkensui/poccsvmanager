@@ -1,6 +1,7 @@
 package com.moatcrew.dynamicforms.services;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,7 +39,20 @@ public class CsvDataServiceTest extends AbstractTest {
     public void deleteTest() throws Exception {
         Map<String, Object> dataMapping = getSampleObjectMap();
         String uuid = csvDataService.create("test", dataMapping);
-        csvDataService.delete("test", uuid);
+        Boolean result = csvDataService.delete("test", uuid);
+        Assert.assertTrue("Delete returned false, should be true.", result);
+    }
+
+    @Test
+    public void updateTest() throws Exception {
+        Map<String, Object> dataMapping = getSampleObjectMap();
+        String uuid = csvDataService.create("test", dataMapping);
+        int newNumber = 13;
+        dataMapping.put("testnumber", newNumber);
+        Boolean result = csvDataService.update("test", uuid, dataMapping);
+        Assert.assertTrue("Update returned false, should be true.", result);
+        JSONObject jsonObject = csvDataService.findByUuid("test", uuid);
+        Assert.assertTrue("Testnumber column doesn't have the updated value that should.", jsonObject.getInt("testnumber") == newNumber);
     }
 
     private Map<String, Object> getSampleObjectMap() {

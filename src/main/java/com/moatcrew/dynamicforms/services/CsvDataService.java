@@ -38,6 +38,23 @@ public class CsvDataService {
         return new JSONArray();
     }
 
+    public JSONObject findByUuid(String form, String uuid) {
+        File csvFile = getCsvFile(form);
+        JSONObject jsonObject = null;
+        final String csvContents = readFile(csvFile);
+
+            Pattern pattern = Pattern.compile(uuid + ".*?$");
+            Matcher matcher = pattern.matcher(csvContents);
+            if (matcher.find()) {
+                try {
+                    jsonObject = getJsonObject(form, matcher.group(), getHeaders(csvFile), null);
+                } catch (IOException e) {
+                    LOG.severe(e.getMessage());
+                }
+            }
+        return jsonObject;
+    }
+
     public String create(String form, Map<String, Object> dataMapping) {
         File csvFile = getCsvFile(form);
         String uuid = UUID.randomUUID().toString();
@@ -79,6 +96,41 @@ public class CsvDataService {
         return false;
     }
 
+    public Boolean update(String form, String uuid, Map<String, Object> dataMapping) {
+        File csvFile = getCsvFile(form);
+        final String csvContents = readFile(csvFile);
+        final String[] headers = getHeaders(csvFile);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
+            dataMapping.put("uuid", uuid);
+            String line = getLineFromMapping(dataMapping, headers);
+            // Remove last pipe
+            line = line.replaceFirst("\\|$", "");
+            Pattern pattern = Pattern.compile(uuid + "\\|.*?$");
+            String[] csvLines = csvContents.split("\\n");
+            for (int i = 1; i < csvLines.length; i++) {
+                final String csvLine = csvLines[i];
+                final Matcher matcher = pattern.matcher(csvLine);
+                if (matcher.matches()) {
+                    writer.write(csvContents.replace(matcher.group(), line)
+                            .replaceAll(EMPTY_LINE_REGEX, "")
+                            .replaceFirst(LAST_LINE_BREAK_REGEX, ""));
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            LOG.severe(e.getMessage());
+        }
+        return false;
+    }
+
+    private String getLineFromMapping(Map<String, Object> dataMapping, String[] headers) {
+        String line = "";
+        for (String header : headers) {
+            line += dataMapping.get(header) + "|";
+        }
+        return line;
+    }
+
     File getCsvFile(final String form) {
         File[] files = csvFilesDirectory.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -101,9 +153,15 @@ public class CsvDataService {
         return content;
     }
 
-    private String[] getHeaders(File file) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        return br.readLine().split("\\|");
+    private String[] getHeaders(File file) {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            return br.readLine().split("\\|");
+        } catch (IOException e) {
+            LOG.severe(e.getMessage());
+        }
+        return null;
     }
 
     private JSONArray fileToJson(String form, File matchingFile, List<String> desiredColumnNames) {

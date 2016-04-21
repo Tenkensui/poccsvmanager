@@ -26,10 +26,7 @@ public class DataController {
     @ResponseBody
     public String create(@PathVariable String formName, HttpServletRequest request) {
         JSONObject uuidObject = new JSONObject();
-        HashMap<String, Object> dataMappings = new HashMap<>();
-        for (Object param : request.getParameterMap().keySet()) {
-            dataMappings.put(param.toString(), request.getParameter(param.toString()));
-        }
+        HashMap<String, Object> dataMappings = getDataMappings(request);
         uuidObject.put("uuid", csvDataService.create(formName, dataMappings));
         return uuidObject.toString();
     }
@@ -38,6 +35,22 @@ public class DataController {
     @ResponseBody
     public String find(@PathVariable String formName) {
         return csvDataService.find(formName).toString();
+    }
+
+    @RequestMapping(value = "/data/find/{formName}/{uuid}", produces = "application/json")
+    @ResponseBody
+    public String find(@PathVariable String formName, @PathVariable String uuid) {
+        return csvDataService.findByUuid(formName, uuid).toString();
+    }
+
+    @RequestMapping(value = "/data/update/{formName}/{uuid}", produces = "application/json")
+    @ResponseBody
+    public String update(@PathVariable String formName, @PathVariable String uuid, HttpServletRequest request) {
+        HashMap<String, Object> dataMappings = getDataMappings(request);
+        Boolean result = csvDataService.update(formName, uuid, dataMappings);
+        JSONObject response = new JSONObject();
+        response.put("response", result);
+        return response.toString();
     }
 
     @RequestMapping(value = "/data/delete/{formName}", produces = "application/json", method = RequestMethod.POST)
@@ -52,5 +65,13 @@ public class DataController {
             response.put("response", result);
         }
         return response.toString();
+    }
+
+    private HashMap<String, Object> getDataMappings(HttpServletRequest request) {
+        HashMap<String, Object> dataMappings = new HashMap<>();
+        for (Object param : request.getParameterMap().keySet()) {
+            dataMappings.put(param.toString(), request.getParameter(param.toString()));
+        }
+        return dataMappings;
     }
 }
