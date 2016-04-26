@@ -16,12 +16,11 @@ public class AngularDynamicFormService {
 
     private Map<String, Table> tablesCache;
 
-    private Map<String, JSONObject> formsCache;
+    private Map<String, JSONArray> formsCache;
 
     private CsvDataService csvDataService;
 
-    public JSONObject getForm(String name) {
-        JSONObject container = new JSONObject();
+    public JSONArray getForm(String name) {
         if (formsCache.containsKey(name)) {
             return formsCache.get(name);
         }
@@ -70,9 +69,8 @@ public class AngularDynamicFormService {
                 }
             }
         }
-        container.put("form", jsonArray);
-        formsCache.put(name, container);
-        return container;
+        formsCache.put(name, jsonArray);
+        return jsonArray;
     }
 
     public JSONObject getFormNames() {

@@ -1,6 +1,6 @@
 package com.moatcrew.dynamicforms.services;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,13 +14,11 @@ public class AngularDynamicFormServiceTest extends AbstractTest {
 
     @Test
     public void getForm() throws Exception {
-        JSONObject jsonObject = angularDynamicFormService.getForm(TEST);
-        Assert.assertNotNull(jsonObject);
-        Assert.assertNotNull(jsonObject.get("form"));
+        JSONArray jsonArray = angularDynamicFormService.getForm(TEST);
+        Assert.assertNotNull(jsonArray);
 
-        jsonObject = angularDynamicFormService.getForm(TEST_2);
-        Assert.assertNotNull(jsonObject);
-        Assert.assertNotNull(jsonObject.get("form"));
+        jsonArray = angularDynamicFormService.getForm(TEST_2);
+        Assert.assertNotNull(jsonArray);
     }
 
     @Test

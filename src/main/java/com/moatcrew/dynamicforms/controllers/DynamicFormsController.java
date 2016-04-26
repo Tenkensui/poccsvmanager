@@ -26,7 +26,7 @@ public class DynamicFormsController {
     @RequestMapping(value = "/form/{formName}", produces = "application/json")
     @ResponseBody
     public String getForm(@PathVariable String formName) {
-        JSONObject object = angularDynamicFormService.getForm(formName);
+        JSONArray object = angularDynamicFormService.getForm(formName);
         return object.toString();
     }
 
