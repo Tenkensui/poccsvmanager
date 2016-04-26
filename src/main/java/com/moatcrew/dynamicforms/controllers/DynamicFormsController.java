@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,15 +19,15 @@ public class DynamicFormsController {
     AngularDynamicFormService angularDynamicFormService;
 
     @RequestMapping("/")
-    public String helloWorld(Model model) {
+    public String helloWorld() {
         return "/services/sample.html";
     }
 
     @RequestMapping(value = "/form/{formName}", produces = "application/json")
     @ResponseBody
     public String getForm(@PathVariable String formName) {
-        JSONArray ja = angularDynamicFormService.getForm(formName);
-        return ja.toString();
+        JSONObject object = angularDynamicFormService.getForm(formName);
+        return object.toString();
     }
 
     @RequestMapping(value = "/forms", produces = "application/json")

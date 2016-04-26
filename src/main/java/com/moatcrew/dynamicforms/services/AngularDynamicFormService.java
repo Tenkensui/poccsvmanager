@@ -12,15 +12,16 @@ import java.util.*;
 /**
  * Created by maruku on 13/04/16.
  */
-public class AngularDynamicFormService implements DynamicFormService<JSONArray> {
+public class AngularDynamicFormService {
 
     private Map<String, Table> tablesCache;
 
-    private Map<String, JSONArray> formsCache;
+    private Map<String, JSONObject> formsCache;
 
     private CsvDataService csvDataService;
 
-    public JSONArray getForm(String name, String... disiredColumns) {
+    public JSONObject getForm(String name) {
+        JSONObject container = new JSONObject();
         if (formsCache.containsKey(name)) {
             return formsCache.get(name);
         }
@@ -69,17 +70,12 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
                 }
             }
         }
-        return jsonArray;
+        container.put("form", jsonArray);
+        formsCache.put(name, container);
+        return container;
     }
 
-    private List<String> getColumnNamesForSelect() {
-        List<String> columnNames = new ArrayList<>();
-        columnNames.add("uuid");
-        columnNames.add("template");
-        return columnNames;
-    }
-
-    public JSONArray getFormNames() {
+    public JSONObject getFormNames() {
         List<String> formNames = new ArrayList<>(tablesCache.keySet());
         Collections.sort(formNames);
         JSONArray jsonArray = new JSONArray();
@@ -88,7 +84,22 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
             jsonObject.put("name", form);
             jsonArray.put(jsonObject);
         }
-        return jsonArray;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("forms", jsonArray);
+        return jsonObject;
+    }
+
+    public AngularDynamicFormService(Map<String, Table> tablesCache, CsvDataService csvDataService) {
+        this.tablesCache = tablesCache;
+        this.formsCache = new HashMap<>();
+        this.csvDataService = csvDataService;
+    }
+
+    private List<String> getColumnNamesForSelect() {
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("uuid");
+        columnNames.add("template");
+        return columnNames;
     }
 
     private String determineType(String sqlType) {
@@ -103,11 +114,5 @@ public class AngularDynamicFormService implements DynamicFormService<JSONArray> 
             return "date";
         }
         return "text";
-    }
-
-    public AngularDynamicFormService(Map<String, Table> tablesCache, CsvDataService csvDataService) {
-        this.tablesCache = tablesCache;
-        this.formsCache = new HashMap<>();
-        this.csvDataService = csvDataService;
     }
 }
