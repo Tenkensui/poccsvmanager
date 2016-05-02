@@ -38,12 +38,12 @@ public class CsvDataService {
         return new JSONArray();
     }
 
-    public JSONObject findByUuid(String form, String uuid) {
+    public JSONObject findById(String form, String id) {
         File csvFile = getCsvFile(form);
         JSONObject jsonObject = null;
         final String csvContents = readFile(csvFile);
 
-            Pattern pattern = Pattern.compile(uuid + ".*?$");
+            Pattern pattern = Pattern.compile(id + ".*?$");
             Matcher matcher = pattern.matcher(csvContents);
             if (matcher.find()) {
                 try {
@@ -60,7 +60,7 @@ public class CsvDataService {
         String uuid = UUID.randomUUID().toString();
         if (csvFile != null) {
             try {
-                dataMapping.put("uuid", uuid);
+                dataMapping.put("id", uuid);
                 String[] headers = getHeaders(csvFile);
                 String line = "\n";
                 for (String header : headers) {
@@ -77,12 +77,12 @@ public class CsvDataService {
         return "";
     }
 
-    public Boolean delete(String form, String uuid) {
+    public Boolean delete(String form, String id) {
         File csvFile = getCsvFile(form);
 
         final String csvContents = readFile(csvFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
-            Pattern pattern = Pattern.compile(uuid + ".*?$");
+            Pattern pattern = Pattern.compile(id + ".*?$");
             Matcher matcher = pattern.matcher(csvContents);
             if (matcher.find()) {
                 writer.write(csvContents.replace(matcher.group(), "")
@@ -96,16 +96,16 @@ public class CsvDataService {
         return false;
     }
 
-    public Boolean update(String form, String uuid, Map<String, Object> dataMapping) {
+    public Boolean update(String form, String id, Map<String, Object> dataMapping) {
         File csvFile = getCsvFile(form);
         final String csvContents = readFile(csvFile);
         final String[] headers = getHeaders(csvFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
-            dataMapping.put("uuid", uuid);
+            dataMapping.put("id", id);
             String line = getLineFromMapping(dataMapping, headers);
             // Remove last pipe
             line = line.replaceFirst("\\|$", "");
-            Pattern pattern = Pattern.compile(uuid + "\\|.*?$");
+            Pattern pattern = Pattern.compile(id + "\\|.*?$");
             String[] csvLines = csvContents.split("\\n");
             for (int i = 1; i < csvLines.length; i++) {
                 final String csvLine = csvLines[i];
@@ -157,7 +157,7 @@ public class CsvDataService {
         BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(file));
-            return br.readLine().split("\\|");
+            return br.readLine().toLowerCase().split("\\|");
         } catch (IOException e) {
             LOG.severe(e.getMessage());
         }
@@ -176,7 +176,7 @@ public class CsvDataService {
                     jsonArray.put(getJsonObject(form, line, columnNames, desiredColumnNames));
                 } else {
                     // Header
-                    columnNames = line.split("\\|");
+                    columnNames = line.toLowerCase().split("\\|");
                 }
                 lineCount++;
             }

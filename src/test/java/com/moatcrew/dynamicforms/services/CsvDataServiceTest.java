@@ -51,7 +51,7 @@ public class CsvDataServiceTest extends AbstractTest {
         dataMapping.put("testnumber", newNumber);
         Boolean result = csvDataService.update("test", uuid, dataMapping);
         Assert.assertTrue("Update returned false, should be true.", result);
-        JSONObject jsonObject = csvDataService.findByUuid("test", uuid);
+        JSONObject jsonObject = csvDataService.findById("test", uuid);
         Assert.assertTrue("Testnumber column doesn't have the updated value that should.", jsonObject.getInt("testnumber") == newNumber);
     }
 

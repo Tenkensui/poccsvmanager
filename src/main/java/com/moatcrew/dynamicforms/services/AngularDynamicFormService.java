@@ -46,7 +46,7 @@ public class AngularDynamicFormService {
                     for (Object arrayObject : dataArray) {
                         JSONObject iter = (JSONObject) arrayObject;
 
-                        stringer.key(iter.get("uuid").toString());
+                        stringer.key(iter.get("id").toString());
                         stringer.value(new JSONObject().put("label", iter.get("template")));
                     }
                     stringer.endObject();
@@ -95,7 +95,7 @@ public class AngularDynamicFormService {
 
     private List<String> getColumnNamesForSelect() {
         List<String> columnNames = new ArrayList<>();
-        columnNames.add("uuid");
+        columnNames.add("id");
         columnNames.add("template");
         return columnNames;
     }
