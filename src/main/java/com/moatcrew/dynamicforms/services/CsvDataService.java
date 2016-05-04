@@ -1,5 +1,7 @@
 package com.moatcrew.dynamicforms.services;
 
+import com.moatcrew.dynamicforms.models.ForeignKey;
+import com.moatcrew.dynamicforms.models.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +25,15 @@ public class CsvDataService {
     private static final String EMPTY_LINE_REGEX = "(?m)^[ \\t]*\\r?\\n";
     private static final String LAST_LINE_BREAK_REGEX = "(?m)[ \\t]*\\r?\\n$";
 
+    private static final String TYPE_PREFIX = "TEST-";
+    private static final String FK_PRIME_FIELD = "_id";
+    public static final String ID_TYPE = "id_type";
+    public static final String VERSION = "version";
+
     private File csvFilesDirectory;
+    private ExceptionService exceptionService;
+    private Map<String, Table> tablesCache;
+
     private Logger LOG = Logger.getLogger(CsvDataService.class.getName());
 
     public JSONArray find(final String form) {
@@ -43,7 +53,7 @@ public class CsvDataService {
         JSONObject jsonObject = null;
         final String csvContents = readFile(csvFile);
 
-            Pattern pattern = Pattern.compile(id + ".*?$");
+            Pattern pattern = Pattern.compile("(?m)" + id + "\\|.*?$");
             Matcher matcher = pattern.matcher(csvContents);
             if (matcher.find()) {
                 try {
@@ -55,21 +65,30 @@ public class CsvDataService {
         return jsonObject;
     }
 
-    public String create(String form, Map<String, Object> dataMapping) {
-        File csvFile = getCsvFile(form);
-        String uuid = UUID.randomUUID().toString();
+    /**
+     * Creates a row in the given csv
+     * @param name of the csv
+     * @param dataMapping map containing the data to be inserted
+     * @return Returns the generated id
+     */
+    public String create(String name, Map<String, Object> dataMapping) {
+        File csvFile = getCsvFile(name);
         if (csvFile != null) {
-            try {
-                dataMapping.put("id", uuid);
-                String[] headers = getHeaders(csvFile);
-                String line = "\n";
-                for (String header : headers) {
-                    line += dataMapping.get(header) + "|";
+           try {
+                // If table is in the exceptions properties it should not generate the id, but rather get the one passed
+                if (!exceptionService.isException(name)) {
+                    String uuid = UUID.randomUUID().toString();
+                    dataMapping.put("id", uuid);
+                    dataMapping.put(ID_TYPE, TYPE_PREFIX + name.toUpperCase());
+                    dataMapping.put(VERSION, 1);
                 }
+                String[] headers = getHeaders(csvFile);
+                String line = getLineFromMapping(tablesCache.get(name), dataMapping, headers);
+
                 // Remove last pipe
                 line = line.replaceFirst("\\|$", "");
                 Files.write(Paths.get(csvFile.toURI()), line.getBytes(), StandardOpenOption.APPEND);
-                return uuid;
+                return dataMapping.get("id").toString();
             } catch (IOException e) {
                 LOG.severe(e.getMessage());
             }
@@ -77,8 +96,14 @@ public class CsvDataService {
         return "";
     }
 
-    public Boolean delete(String form, String id) {
-        File csvFile = getCsvFile(form);
+    /**
+     * Deletes the row of the given csv name identified with the given id
+     * @param name of the given csv from which to delete the row
+     * @param id to delete
+     * @return true if it worked. False otherwise
+     */
+    public Boolean delete(String name, String id) {
+        File csvFile = getCsvFile(name);
 
         final String csvContents = readFile(csvFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
@@ -102,7 +127,7 @@ public class CsvDataService {
         final String[] headers = getHeaders(csvFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
             dataMapping.put("id", id);
-            String line = getLineFromMapping(dataMapping, headers);
+            String line = getLineFromMapping(tablesCache.get(form), dataMapping, headers);
             // Remove last pipe
             line = line.replaceFirst("\\|$", "");
             Pattern pattern = Pattern.compile(id + "\\|.*?$");
@@ -123,8 +148,25 @@ public class CsvDataService {
         return false;
     }
 
-    private String getLineFromMapping(Map<String, Object> dataMapping, String[] headers) {
-        String line = "";
+    private String getLineFromMapping(Table table, Map<String, Object> dataMapping, String[] headers) {
+        String line = "\n";
+
+        // Get all fk prefixes to fetch all its versions and types
+        for (String col : headers) {
+            if (!"template".equals(col)) {
+                final ForeignKey fk = table.getColumn(col).getForeignKey();
+                if (fk != null && col.endsWith(FK_PRIME_FIELD)) {
+                    // Find data for field
+                    JSONObject obj = findById(fk.getReferenceTable().getName(), dataMapping.get(col).toString());
+                    String baseColName = col.replace(FK_PRIME_FIELD, "");
+                    String typeColName = baseColName + "_" + ID_TYPE;
+                    String versionColName = baseColName + "_"  + VERSION;
+                    dataMapping.put(typeColName, obj.get(ID_TYPE));
+                    dataMapping.put(versionColName, obj.get(VERSION));
+
+                }
+            }
+        }
         for (String header : headers) {
             line += dataMapping.get(header) + "|";
         }
@@ -134,7 +176,7 @@ public class CsvDataService {
     File getCsvFile(final String form) {
         File[] files = csvFilesDirectory.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.startsWith(form + ".") && name.endsWith("csv");
+                return name.toLowerCase().startsWith(form.toLowerCase() + ".") && name.endsWith("csv");
             }
         });
         return files.length > 0 ? files[0] : null;
@@ -200,11 +242,15 @@ public class CsvDataService {
         return jsonObject;
     }
 
-    public CsvDataService(String csvFilesDirectory) throws URISyntaxException {
+    public CsvDataService(Map<String, Table> tablesCache, ExceptionService exceptionService, String csvFilesDirectory) throws URISyntaxException {
         this.csvFilesDirectory = new File(csvFilesDirectory);
+        this.exceptionService = exceptionService;
+        this.tablesCache = tablesCache;
     }
 
-    CsvDataService(File csvPath) {
+    CsvDataService(Map<String, Table> tablesCache, ExceptionService exceptionService, File csvPath) {
+        this.exceptionService = exceptionService;
         this.csvFilesDirectory = csvPath;
+        this.tablesCache = tablesCache;
     }
 }

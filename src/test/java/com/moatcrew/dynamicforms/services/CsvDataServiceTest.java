@@ -29,8 +29,34 @@ public class CsvDataServiceTest extends AbstractTest {
     public void createTest() throws Exception {
         Map<String, Object> dataMapping = getSampleObjectMap();
         String uuid = csvDataService.create("test", dataMapping);
-        String expected = uuid + "|newPk|newPk2|newValue|12|2015-05-29|template";
+        String expected = uuid + "|TEST-TEST|1|newValue|12|2015-05-29|template";
         File csvFile = csvDataService.getCsvFile("test");
+        List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
+        Assert.assertEquals(expected, contents.get(contents.size() - 1));
+    }
+
+    @Test
+    public void createTestWithForeignKey() throws Exception {
+        Map<String, Object> dataMapping = getSampleTest2();
+        String uuid = csvDataService.create("test2", dataMapping);
+        String expected = uuid + "|TEST-TEST2|1|newValue|12|2015-05-29|2|id_type|1|template";
+        File csvFile = csvDataService.getCsvFile("test2");
+        List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
+        Assert.assertEquals(expected, contents.get(contents.size() - 1));
+    }
+
+    @Test
+    public void createWithExceptionTest() throws Exception {
+        Map<String, Object> dataMapping = getSampleObjectMap();
+        String customId = "custom_id";
+        String customType = "custom_type";
+        String customVersion = "custom_version";
+        dataMapping.put("id", customId);
+        dataMapping.put("id_type", customType);
+        dataMapping.put("version", customVersion);
+        String uuid = csvDataService.create("test3", dataMapping);
+        String expected = uuid + "|" + customType + "|" + customVersion + "|newValue|12|2015-05-29|template";
+        File csvFile = csvDataService.getCsvFile("test3");
         List<String> contents = Files.readAllLines(Paths.get(csvFile.toURI()), Charset.forName("utf8"));
         Assert.assertEquals(expected, contents.get(contents.size() - 1));
     }
@@ -57,11 +83,23 @@ public class CsvDataServiceTest extends AbstractTest {
 
     private Map<String, Object> getSampleObjectMap() {
         Map<String, Object> dataMapping = new HashMap<>();
-        dataMapping.put("testpk1", "newPk");
-        dataMapping.put("testpk2", "newPk2");
+        dataMapping.put("id_type", "type");
+        dataMapping.put("version", 1);
         dataMapping.put("testvarchar", "newValue");
         dataMapping.put("testnumber", 12);
         dataMapping.put("testdate", "2015-05-29");
+        dataMapping.put("template", "template");
+        return dataMapping;
+    }
+
+    private Map<String, Object> getSampleTest2() {
+        Map<String, Object> dataMapping = new HashMap<>();
+        dataMapping.put("id_type", "type");
+        dataMapping.put("version", 1);
+        dataMapping.put("testvarchar", "newValue");
+        dataMapping.put("testnumber", 12);
+        dataMapping.put("testdate", "2015-05-29");
+        dataMapping.put("test_id", 2);
         dataMapping.put("template", "template");
         return dataMapping;
     }

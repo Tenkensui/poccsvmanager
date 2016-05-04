@@ -1,24 +1,37 @@
 create table test (
-    testpk1 TIMESTAMP not null,
-    testpk2 varchar(255) not null,
+    id varchar(255) not null,
+    id_type varchar(255) not null,
+    version decimal(19,0),
     testvarchar varchar(255),
     testnumber decimal(19,2),
     testdate TIMESTAMP not null,
-    PRIMARY KEY testpk1, testpk2
+    PRIMARY KEY id, id_type, version
 );
 
-create table test_2 (
-    testpk1 TIMESTAMP not null,
-    testpk2 varchar(255) not null,
+create table test2 (
+    id varchar(255) not null,
+    id_type varchar(255) not null,
+    version decimal(19,0),
     testvarchar varchar(255),
     testnumber decimal(19,2),
     testdate TIMESTAMP not null,
-    fk1 TIMESTAMP,
-    fk2 VARCHAR(255),
-    PRIMARY KEY testpk1, testpk2
+    test_id varchar(255),
+    test_id_type varchar(255),
+    test_version decimal(19,0)
+    PRIMARY KEY id, id_type, version
 );
 
-alter table test_2
-  add CONSTRAINT fkutoeuuoe
-  FOREIGN KEY (fk1, fk2)
+create table test3 (
+    id varchar(255) not null,
+    id_type varchar(255) not null,
+    version decimal(19,0),
+    testvarchar varchar(255),
+    testnumber decimal(19,2),
+    testdate TIMESTAMP not null,
+    PRIMARY KEY id, id_type, version
+);
+
+alter table test2
+  add CONSTRAINT fktest1test2
+  FOREIGN KEY (test_id, test_id_type, test_version)
   REFERENCES test;

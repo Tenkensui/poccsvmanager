@@ -1,0 +1,2 @@
+id|id_type|version|testpk1|testpk2|testvarchar|testnumber|testdate|template
+manual_id|id_type|1|someguid|type|some varchar|14.2|2015-05-29|Template

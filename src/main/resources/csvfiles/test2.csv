@@ -1,2 +1,2 @@
-id|testpk1|testpk2|testvarchar|testnumber|testdate|fk1|fk2|template
-uuid|someguid2|type2|some varchar|14.2|2015-05-29|someguid|type|Template
+id|id_type|version|testvarchar|testnumber|testdate|test_id|test_id_type|test_version|template
+id|type|1|some varchar|14.2|2015-05-29|test_id|test_id_type|test_version|Template
