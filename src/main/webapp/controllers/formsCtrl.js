@@ -12,7 +12,7 @@ app.controller('formsCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.successCallback = function(resGet) {
         $scope.forms = resGet.data['forms'];
-    }
+    };
 
     $scope.errorCallback = function(errGet) {
         $scope.errGet = errGet.data;
