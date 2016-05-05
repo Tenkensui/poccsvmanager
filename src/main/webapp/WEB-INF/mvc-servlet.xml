@@ -23,6 +23,7 @@
     <bean name="angularDynamicFormService" class="com.moatcrew.dynamicforms.services.AngularDynamicFormService">
         <constructor-arg ref="tablesCache"/>
         <constructor-arg ref="csvDataService"/>
+        <constructor-arg ref="exceptionService"/>
     </bean>
 
     <bean name="csvDataService" class="com.moatcrew.dynamicforms.services.CsvDataService">

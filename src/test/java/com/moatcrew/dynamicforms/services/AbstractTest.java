@@ -29,6 +29,6 @@ public class AbstractTest {
         exceptionService = new ExceptionService(properties);
         sqlParserService = new SqlParserService(new HashMap<String, Table>());
         csvDataService = new CsvDataService(sqlParserService.getTablesCache(), exceptionService, new File(CsvDataServiceTest.class.getResource("/csvfiles/").getFile()));
-        angularDynamicFormService = new AngularDynamicFormService(sqlParserService.getTablesCache(), csvDataService);
+        angularDynamicFormService = new AngularDynamicFormService(sqlParserService.getTablesCache(), csvDataService, exceptionService);
     }
 }

@@ -14,11 +14,14 @@ import java.util.*;
  */
 public class AngularDynamicFormService {
 
-    private Map<String, Table> tablesCache;
+    // TODO: Make this more dynamic
+    public final static String[] ID_FIELDS = new String[] { "id", "id_type", "version" };
 
+    private Map<String, Table> tablesCache;
     private Map<String, JSONArray> formsCache;
 
     private CsvDataService csvDataService;
+    private ExceptionService exceptionService;
 
     public JSONArray getForm(String name) {
         if (formsCache.containsKey(name)) {
@@ -35,8 +38,9 @@ public class AngularDynamicFormService {
                             .put("type", determineType(column.getType()))
                             .put("model", column.getName())
                             .put("label", column.getName());
-
-                    jsonArray.put(jsonObject);
+                    if (!isPKField(column.getName()) || exceptionService.isException(name)) {
+                        jsonArray.put(jsonObject);
+                    }
                 } else if (!foreignKeys.contains(column.getForeignKey())) {
                     JSONArray dataArray = csvDataService.find(column.getForeignKey().getReferenceTable().getName(),
                             getColumnNamesForSelect());
@@ -87,10 +91,11 @@ public class AngularDynamicFormService {
         return jsonObject;
     }
 
-    public AngularDynamicFormService(Map<String, Table> tablesCache, CsvDataService csvDataService) {
+    public AngularDynamicFormService(Map<String, Table> tablesCache, CsvDataService csvDataService, ExceptionService exceptionService) {
         this.tablesCache = tablesCache;
         this.formsCache = new HashMap<>();
         this.csvDataService = csvDataService;
+        this.exceptionService = exceptionService;
     }
 
     private List<String> getColumnNamesForSelect() {
@@ -98,6 +103,15 @@ public class AngularDynamicFormService {
         columnNames.add("id");
         columnNames.add("template");
         return columnNames;
+    }
+
+    private boolean isPKField(String field) {
+        for (String s : ID_FIELDS) {
+            if (s.equals(field)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String determineType(String sqlType) {
