@@ -1,4 +1,4 @@
-var dynformApp = angular.module('app', ['dynform']);
+var dynformApp = angular.module('app', []);
 
   dynformApp.controller('AppCtrl', ['$scope', function ($scope) {
     $scope.stdFormTemplate = {
@@ -234,9 +234,9 @@ var dynformApp = angular.module('app', ['dynform']);
       return angular.toJson(temp, true);
     };
   })
-      .config(['$controllerProvider', function($controllerProvider) {
-        $controllerProvider.allowGlobals();
-      }]);
+  .config(['$controllerProvider', function($controllerProvider) {
+    $controllerProvider.allowGlobals();
+  }]);
 
 
 

@@ -6,14 +6,18 @@
 </head>
         <body ng-app="app">
             <div class="container-fluid" style="margin-top: 10%" ng-controller="formsCtrl">
-                <li>
                 <div class="col-xs-offset-3 col-xs-6">
+                    <ul>
+                        <li ng-repeat="form in forms">
+                            <button ng-click="selectedForm(form.name)">{{form.name}}</button>
+                        </li>
+                    </ul>
                     <button class="btn btn-default" style="margin-left: 35%;" ng-click="getCall()">Refresh</button>
                     <br>
                     <span class="text-danger text-center" ng-if="errGet"><h1>{{errGet}}</h1></span>
                     <span ng-if="resGet"><pre>{{resGet | json}}</pre></span>
                 </div>
-                </li>
+
                 <div class="col-xs-3"></div>
             </div>
 

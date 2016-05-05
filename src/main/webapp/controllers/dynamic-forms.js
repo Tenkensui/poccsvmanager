@@ -14,7 +14,7 @@
 * @param {Object} ngModel - An object in the current scope where the form data should be stored.
 * @example <dynamic-form template-url="form-template.js" ng-model="formData"></dynamic-form>
 */
-angular.module('dynform', [])
+angular.module('app')
   .directive('dynamicForm', ['$q', '$parse', '$http', '$templateCache', '$compile', '$document', '$timeout', function ($q, $parse, $http, $templateCache, $compile, $document, $timeout) {
     var supported = {
         //  Text-based elements
