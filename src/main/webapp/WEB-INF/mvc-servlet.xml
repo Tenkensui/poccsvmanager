@@ -8,6 +8,14 @@
     <bean name="tablesCache" class="java.util.HashMap" />
 
     <!-- Services -->
+    <bean id="exceptionPreperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations" value="classpath*:exception.properties"/>
+    </bean>
+
+    <bean name="exceptionService" class="com.moatcrew.dynamicforms.services.ExceptionService">
+        <constructor-arg ref="exceptionPreperties"/>
+    </bean>
+
     <bean name="sqlParserService" class="com.moatcrew.dynamicforms.services.SqlParserService">
         <constructor-arg ref="tablesCache"/>
     </bean>
@@ -18,7 +26,10 @@
     </bean>
 
     <bean name="csvDataService" class="com.moatcrew.dynamicforms.services.CsvDataService">
-        <constructor-arg value="C:\Users\e-jenn\Desktop\pcoforbarclaysaccess\src\main\resources\csvfiles"/>
+        <!--<constructor-arg value="${csv.path}"/>-->
+        <constructor-arg value="C:\Users\e-mcce\dev\poccsvmanager\src\main\resources\csvfiles"/>
+        <constructor-arg ref="tablesCache"/>
+        <constructor-arg ref="exceptionService"/>
     </bean>
 
     <context:component-scan base-package="com.moatcrew.dynamicforms"/>
@@ -30,6 +41,5 @@
     <mvc:resources mapping="/views/**" location="/views/" />
     <mvc:resources mapping="/scripts/**" location="/scripts/" />
     <mvc:resources mapping="/app.js" location="/app.js" />
-    <mvc:resources mapping="/app2.js" location="/app2.js" />
 
 </beans>
