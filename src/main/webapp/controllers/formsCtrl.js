@@ -8,7 +8,7 @@
  * @requires $scope
  * */
 var app = angular.module('app');
-app.controller('formsCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('formsCtrl', ['$scope', '$http', 'SelectFormFactory', function($scope, $http, SelectFormFactory) {
 
     $scope.successCallback = function(resGet) {
         $scope.forms = resGet.data['forms'];
@@ -26,6 +26,7 @@ app.controller('formsCtrl', ['$scope', '$http', function($scope, $http) {
 
     $scope.selectedForm = function(formName) {
         console.log(formName);
+        SelectFormFactory.setSelectedForm(formName);
     };
 
     $scope.getCall();
