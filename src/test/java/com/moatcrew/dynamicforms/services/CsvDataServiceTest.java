@@ -81,6 +81,21 @@ public class CsvDataServiceTest extends AbstractTest {
         Assert.assertTrue("Testnumber column doesn't have the updated value that should.", jsonObject.getInt("testnumber") == newNumber);
     }
 
+    @Test
+    public void updateTestWithForeignKey() throws Exception {
+        Map<String, Object> dataMapping = getSampleTest2();
+        String id = "id";
+        String testId = "3";
+        dataMapping.put("test_id", testId);
+        Boolean result = csvDataService.update("test2", id, dataMapping);
+        Assert.assertTrue("Update returned false, should be true.", result);
+        JSONObject jsonObject = csvDataService.findById("test2", id);
+        Assert.assertTrue("test_id column doesn't have the updated value that should.", jsonObject.getString("test_id").equals(testId));
+        Assert.assertNotNull(jsonObject.get("test_id_type"));
+        Assert.assertNotNull(jsonObject.get("test_version"));
+    }
+
+
     private Map<String, Object> getSampleObjectMap() {
         Map<String, Object> dataMapping = new HashMap<>();
         dataMapping.put("id_type", "type");

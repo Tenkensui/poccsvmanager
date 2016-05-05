@@ -2,6 +2,7 @@ package com.moatcrew.dynamicforms.services;
 
 import com.moatcrew.dynamicforms.models.ForeignKey;
 import com.moatcrew.dynamicforms.models.Table;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,6 +11,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -51,17 +53,16 @@ public class CsvDataService {
     public JSONObject findById(String form, String id) {
         File csvFile = getCsvFile(form);
         JSONObject jsonObject = null;
-        final String csvContents = readFile(csvFile);
-
-            Pattern pattern = Pattern.compile("(?m)" + id + "\\|.*?$");
-            Matcher matcher = pattern.matcher(csvContents);
-            if (matcher.find()) {
-                try {
-                    jsonObject = getJsonObject(form, matcher.group(), getHeaders(csvFile), null);
-                } catch (IOException e) {
-                    LOG.severe(e.getMessage());
-                }
+        final String csvContents = removeFirstLine(readFile(csvFile));
+        Pattern pattern = Pattern.compile("(?m)" + id + "\\|.*?$");
+        Matcher matcher = pattern.matcher(csvContents);
+        if (matcher.find()) {
+            try {
+                jsonObject = getJsonObject(form, matcher.group(), getHeaders(csvFile), null);
+            } catch (IOException e) {
+                LOG.severe(e.getMessage());
             }
+        }
         return jsonObject;
     }
 
@@ -193,6 +194,12 @@ public class CsvDataService {
             LOG.severe(e.getMessage());
         }
         return content;
+    }
+
+    private String removeFirstLine(String contents) {
+        String[] splitted = contents.split("\n");
+        String[] stripped = Arrays.copyOfRange(splitted, 1, splitted.length);
+        return StringUtils.join(stripped, "\n");
     }
 
     private String[] getHeaders(File file) {
