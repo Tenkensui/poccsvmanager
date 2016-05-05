@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app" id="ng-app">
+<html >
   <head>
     <title>Angular Dynamic Forms Test</title>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -8,6 +8,39 @@
       .pagination,
       .carousel a {
         cursor: pointer;
+      }
+
+      button {
+        border-top: 1px solid #96d1f8;
+        background: #65a9d7;
+        background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+        background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+        background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+        background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+        background: -o-linear-gradient(top, #3e779d, #65a9d7);
+        padding: 5px 30px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        box-shadow: rgba(0,0,0,1) 0 1px 0;
+        text-shadow: rgba(0,0,0,.4) 0 1px 0;
+        color: white;
+        font-size: 15px;
+        font-family: "Arial Black", sans-serif;
+        text-decoration: none;
+        vertical-align: bottom;
+        margin-top: 10px;
+      }
+      button:hover {
+        border-top-color: #28597a;
+        background: #28597a;
+        color: #ccc;
+      }
+      button:active {
+        border-top-color: #1b435e;
+        background: #1b435e;
       }
       
       .fixed {
@@ -78,6 +111,7 @@
         padding: 1ex;
         width: 100%;
       }
+
     </style>
     <!--[if lte IE 8]>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.1/json3.min.js"></script>
@@ -88,33 +122,43 @@
         document.createElement('ng-view');
         document.createElement('ng-form');
         document.createElement('dynamic-form');
-        
+
         // Optionally these for CSS
         document.createElement('ng:include');
         document.createElement('ng:pluralize');
         document.createElement('ng:view');
         document.createElement('ng:form');
-        
+
         $(document).ready(function() {
           angular.bootstrap(document.documentElement);
         });
       </script>
     <![endif]-->
   </head>
-  <body ng-controller="AppCtrl" ng-cloak="">
-    <p>This demo is a really ugly example of the basic functionality of this module.  Have a look
-      through the code and get a feel for how everything works.</p>
-    <dynamic-form class="col-md-8" template-url="/form/test_2" ng-model="urlFormData">
-    </dynamic-form>
-    <div class="col-md-4">
-      <div class="fixed col-md-4">
-        <pre>stdFormData: {{stdFormData | pretty}}</pre>
-        <pre>urlFormData: {{urlFormData | pretty}}</pre>
+  <body>
+    <div ng-app="app" id="ng-app">
+      <div  ng-controller="AppCtrl" ng-cloak="">
+        <dynamic-form class="col-md-8" template-url="/form/test_2" ng-model="urlFormData">
+
+        </dynamic-form>
+        <div class="col-md-4">
+          <div class="fixed col-md-4">
+            <div w3-include-html="../services/postForm.html"></div>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- Load scripts at the end for performance. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
-    <script src="../controllers/dynamic-forms.js"></script>
-    <script src="../app.js"></script>
+
+
+        <!-- Load scripts at the end for performance. -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-resource.min.js"></script>
+        <script src="http://www.w3schools.com/lib/w3data.js"></script>
+        <script src="../controllers/dynamic-forms.js"></script>
+        <script src="../controllers/formsCtrl.js"></script>
+        <script src="../controllers/postCtrl.js"></script>
+        <script src="../app.js"></script>
+
   </body>
 </html>

@@ -1,5 +1,6 @@
-angular.module('app', ['dynform'])
-  .controller('AppCtrl', ['$scope', function ($scope) {
+var dynformApp = angular.module('app', ['dynform']);
+
+  dynformApp.controller('AppCtrl', ['$scope', function ($scope) {
     $scope.stdFormTemplate = {
       "fieldset": {
         "type": "fieldset",
@@ -229,7 +230,15 @@ angular.module('app', ['dynform'])
       catch (e) {
         temp = input;
       }
-      
+
       return angular.toJson(temp, true);
     };
-  });
+  })
+      .config(['$controllerProvider', function($controllerProvider) {
+        $controllerProvider.allowGlobals();
+      }]);
+
+
+
+
+

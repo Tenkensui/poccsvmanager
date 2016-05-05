@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+    <body ng-app="app">
+        <div class="container-fluid" style="margin-top: 10%" ng-controller="postCtrl">
+            <div class="col-xs-offset-4 col-xs-7">
+                <button class="btn btn-success" ng-click="postCall()">Submit</button>
+                <br>
+                <span class="text-danger text-center" ng-if="errPost"><h1>{{errPost}}</h1></span>
+                <span ng-if="resPost"><pre>{{resPost | json}}</pre></span>
+            </div>
+            <div class="col-xs-3"></div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-resource.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-loader.js"></script>
+        <script src="../app.js"></script>
+        <script src="../controllers/postCtrl.js"></script>
+        <script src="../controllers/dynamic-forms.js"></script>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+        <body ng-app="app">
+            <div class="container-fluid" style="margin-top: 10%" ng-controller="formsCtrl">
+                <li>
+                <div class="col-xs-offset-3 col-xs-6">
+                    <button class="btn btn-default" style="margin-left: 35%;" ng-click="getCall()">Refresh</button>
+                    <br>
+                    <span class="text-danger text-center" ng-if="errGet"><h1>{{errGet}}</h1></span>
+                    <span ng-if="resGet"><pre>{{resGet | json}}</pre></span>
+                </div>
+                </li>
+                <div class="col-xs-3"></div>
+            </div>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-resource.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-loader.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.js"></script>
+            <script src=" http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+            <script src="../app.js"></script>
+            <script src="../controllers/formsCtrl.js"></script>
+            <script src="../controllers/dynamic-forms.js"></script>
+        </body>
+</html>
