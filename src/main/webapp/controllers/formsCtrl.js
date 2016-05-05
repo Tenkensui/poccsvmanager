@@ -12,7 +12,7 @@ app.controller('formsCtrl', ['$scope', '$http', 'SelectFormFactory', function($s
 
     $scope.successCallback = function(resGet) {
         $scope.forms = resGet.data['forms'];
-    }
+    };
 
     $scope.errorCallback = function(errGet) {
         $scope.errGet = errGet.data;
