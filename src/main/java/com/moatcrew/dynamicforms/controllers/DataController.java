@@ -5,10 +5,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -24,9 +21,9 @@ public class DataController {
 
     @RequestMapping(value = "/data/create/{formName}", produces = "application/json", method = RequestMethod.POST)
     @ResponseBody
-    public String create(@PathVariable String formName, HttpServletRequest request) {
+    public String create(@PathVariable String formName, @RequestBody String json) {
         JSONObject uuidObject = new JSONObject();
-        HashMap<String, Object> dataMappings = getDataMappings(request);
+        HashMap<String, Object> dataMappings = getDataMappings(new JSONObject(json));
         uuidObject.put("id", csvDataService.create(formName, dataMappings));
         return uuidObject.toString();
     }
@@ -45,8 +42,8 @@ public class DataController {
 
     @RequestMapping(value = "/data/update/{formName}/{id}", produces = "application/json")
     @ResponseBody
-    public String update(@PathVariable String formName, @PathVariable String id, HttpServletRequest request) {
-        HashMap<String, Object> dataMappings = getDataMappings(request);
+    public String update(@PathVariable String formName, @PathVariable String id, @RequestBody String json) {
+        HashMap<String, Object> dataMappings = getDataMappings(new JSONObject(json));
         Boolean result = csvDataService.update(formName, id, dataMappings);
         JSONObject response = new JSONObject();
         response.put("response", result);
@@ -67,10 +64,10 @@ public class DataController {
         return response.toString();
     }
 
-    private HashMap<String, Object> getDataMappings(HttpServletRequest request) {
+    private HashMap<String, Object> getDataMappings(JSONObject jsonObject) {
         HashMap<String, Object> dataMappings = new HashMap<>();
-        for (Object param : request.getParameterMap().keySet()) {
-            dataMappings.put(param.toString(), request.getParameter(param.toString()));
+        for (String key : jsonObject.keySet()) {
+            dataMappings.put(key, jsonObject.get(key));
         }
         return dataMappings;
     }

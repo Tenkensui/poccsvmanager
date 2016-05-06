@@ -144,7 +144,7 @@
 
         </dynamic-form>
         <div class="col-xs-offset-4 col-xs-7">
-            <button class="btn btn-success" ng-click="postCall()">Submit</button>
+            <button type="submit" class="btn btn-success" ng-click="postCall()">Submit</button>
             <br>
             <span class="text-danger text-center" ng-if="errPost"></span>
             <span ng-if="resPost"><pre>{{resPost | json}}</pre></span>

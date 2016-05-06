@@ -156,7 +156,7 @@ public class CsvDataService {
         for (String col : headers) {
             if (!"template".equals(col)) {
                 final ForeignKey fk = table.getColumn(col).getForeignKey();
-                if (fk != null && col.endsWith(FK_PRIME_FIELD)) {
+                if (fk != null && col.endsWith(FK_PRIME_FIELD) && dataMapping.containsKey(col)) {
                     // Find data for field
                     JSONObject obj = findById(fk.getReferenceTable().getName(), dataMapping.get(col).toString());
                     String baseColName = col.replace(FK_PRIME_FIELD, "");

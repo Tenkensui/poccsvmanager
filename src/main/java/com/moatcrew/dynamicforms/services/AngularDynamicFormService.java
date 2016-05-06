@@ -72,6 +72,11 @@ public class AngularDynamicFormService {
                     foreignKeys.add(column.getForeignKey());
                 }
             }
+            JSONObject templateObject = new JSONObject()
+                    .put("type", determineType("varchar"))
+                    .put("model", "template")
+                    .put("label", "template");
+            jsonArray.put(templateObject);
         }
         formsCache.put(name, jsonArray);
         return jsonArray;
