@@ -143,14 +143,12 @@
         <dynamic-form name="dynamicForm" class="col-md-8" template-url="/form/test2" ng-model="urlFormData" novalidate>
 
         </dynamic-form>
-        <div id="errors" ng-show="valid == false">
-            <ul>
-                <li ng-repeat="(key, errors) in dynamicForm.$error track by $index">
+        <div id="errors" class="col-xs-offset-4 col-xs-7" ng-show="valid == false">
+                <span ng-repeat="(key, errors) in dynamicForm.$error track by $index">
                     <ul>
                         <li ng-repeat="e in errors">{{ e.$name }} has an error: <strong>{{ key }}</strong>.</li>
                     </ul>
-                </li>
-            </ul>
+                </span>
         </div>
         <div class="col-xs-offset-4 col-xs-7">
             <button type="submit" ng-disable="!dynamicForm.$valid" class="btn btn-success" ng-click="postCall()">Submit</button>

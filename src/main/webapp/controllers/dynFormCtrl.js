@@ -230,10 +230,8 @@ angular.module('app')
         $scope.urlFormData = {};
         $scope.postCall = function () {
             try {
-                console.log($scope.urlFormData);
                 var currentForm = SelectFormFactory.getSelectedForm();
                 var postURL = "http://localhost:1999/data/create/" + currentForm;
-                console.log($scope.dynamicForm);
                 if ($scope.dynamicForm.$valid) {
                     $scope.valid = true;
                     $http({
@@ -242,7 +240,6 @@ angular.module('app')
                         data: JSON.stringify($scope.urlFormData),
                         headers: {'Content-Type': 'application/json'}
                     }).then(successCallBack, errorCallBack);
-                    console.log($scope.urlFormData)
                 } else {
                     $scope.valid = false;
                 }
