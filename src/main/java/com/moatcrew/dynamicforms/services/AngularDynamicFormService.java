@@ -75,7 +75,8 @@ public class AngularDynamicFormService {
             JSONObject templateObject = new JSONObject()
                     .put("type", determineType("varchar"))
                     .put("model", "template")
-                    .put("label", "template");
+                    .put("label", "template *")
+                    .put("required", true);
             jsonArray.put(templateObject);
         }
         formsCache.put(name, jsonArray);

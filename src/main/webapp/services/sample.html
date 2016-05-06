@@ -140,11 +140,20 @@
 <body>
 <div ng-app="app" id="ng-app">
     <div ng-controller="AppCtrl" ng-cloak="">
-        <dynamic-form class="col-md-8" template-url="/form/test2" ng-model="urlFormData">
+        <dynamic-form name="dynamicForm" class="col-md-8" template-url="/form/test2" ng-model="urlFormData" novalidate>
 
         </dynamic-form>
+        <div id="errors" ng-show="valid == false">
+            <ul>
+                <li ng-repeat="(key, errors) in dynamicForm.$error track by $index">
+                    <ul>
+                        <li ng-repeat="e in errors">{{ e.$name }} has an error: <strong>{{ key }}</strong>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
         <div class="col-xs-offset-4 col-xs-7">
-            <button type="submit" class="btn btn-success" ng-click="postCall()">Submit</button>
+            <button type="submit" ng-disable="!dynamicForm.$valid" class="btn btn-success" ng-click="postCall()">Submit</button>
             <br>
             <span class="text-danger text-center" ng-if="errPost"></span>
             <span ng-if="resPost"><pre>{{resPost | json}}</pre></span>
