@@ -7,6 +7,17 @@
 
     <bean name="tablesCache" class="java.util.HashMap" />
 
+    <bean id="defaultProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath*:default.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <context:property-placeholder/>
+
     <!-- Services -->
     <bean id="exceptionPreperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations" value="classpath*:exception.properties"/>
@@ -27,8 +38,7 @@
     </bean>
 
     <bean name="csvDataService" class="com.moatcrew.dynamicforms.services.CsvDataService">
-        <!--<constructor-arg value="${csv.path}"/>-->
-        <constructor-arg value="C:\Users\e-jenn\Desktop\poccsvmanager\src\main\resources\csvfiles"/>
+        <constructor-arg value="${csv.path}"/>
         <constructor-arg ref="tablesCache"/>
         <constructor-arg ref="exceptionService"/>
     </bean>
