@@ -9,7 +9,7 @@ Uses the MIT License.  See `LICENSE` file for details.
 Installation
 ------------
 ### Bower ###
-The easy way. 
+The easy way.
 
 1. `bower install angular-dynforms` (add `--save` if you want to add the dependency to your own
     project - HIGHLY RECOMMENDED)
